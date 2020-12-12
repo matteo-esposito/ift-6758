@@ -1,0 +1,1925 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{IFT\_6758\_HW\_2\_(En)}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    IFT-6758 : Data Science
+
+Fall - 2020
+
+Homework - 2 - Matteo Esposito
+
+    \href{https://colab.research.google.com/drive/1CKUlvdEa1bJLS2_P7UeaPUWSZ_ZDUDSH}{Notebook}
+due November 06, 2020 at
+\href{https://www.worldtimebuddy.com/?qm=1\&lid=6077243\&h=6077243\&date=2020-11-06\&sln=23-24}{23.59
+EST} as \textbf{PDF} on
+\href{https://www.gradescope.com/courses/179325/assignments/773268}{Gradescope}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}@title Imports (Run this cell first) \PYZob{} run: \PYZdq{}auto\PYZdq{} \PYZcb{}}
+\PY{n}{plotting\PYZus{}library} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{matplotlib}\PY{l+s+s2}{\PYZdq{}}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{decomposition} \PY{k+kn}{import} \PY{n}{PCA}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{linear\PYZus{}model} \PY{k+kn}{import} \PY{n}{LinearRegression}
+
+\PY{c+c1}{\PYZsh{} Not mandatory to use}
+\PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{utils} \PY{k+kn}{import} \PY{n}{resample}
+
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+
+\PY{k+kn}{import} \PY{n+nn}{seaborn} \PY{k}{as} \PY{n+nn}{sns}
+
+\PY{c+c1}{\PYZsh{} Uncomment this line below if using seaborn}
+\PY{n}{sns}\PY{o}{.}\PY{n}{set}\PY{p}{(}\PY{p}{)} 
+
+\PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+
+\PY{n}{path} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{https://raw.githubusercontent.com/Jhelum\PYZhy{}Ch/DataScience\PYZus{}IFT6758/gh\PYZhy{}pages/media/}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{pca}{%
+\subsection{PCA}\label{pca}}
+
+    \hypertarget{q1}{%
+\paragraph{\texorpdfstring{\textbf{Q1}}{Q1}}\label{q1}}
+
+    \textbf{12 points} = \((1.5 + 2 + 2 + 1.5 + 1.5 + 2 + 1.5)\)
+
+    The cell below loads a subset of the California Housing dataset.
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\item
+  Store only the \texttt{latitude}, \texttt{longitude} and
+  \texttt{median\_house\_value} columns in a dataframe denoted by a
+  variable \texttt{features}. Produce a scatter plot of the data points
+  with \texttt{longitude} along x-axis, \texttt{latitude} along y-axis
+  and the points colored by \texttt{median\_house\_value} i.e.~higher
+  the \texttt{median\_house\_value}, darker the data point in the plot.
+\item
+  Perform a PCA on the subset of the dataframe you created in (a) with
+  only the \texttt{latitude} and \texttt{longitude} columns. Produce a
+  scatter plot of the transformed data points with the first principal
+  component \texttt{PC\ 1} along x-axis and second principal component
+  \texttt{PC\ 2} along y-axis and the points colored by
+  \texttt{median\_house\_value} just like in (a).
+\item
+  Provide a simple interpretation for what the first principal component
+  \texttt{PC\ 1} could possibly represent in the plot in (b) by
+  comparing it with that in (a). \textbf{Justify} your answer.
+\item
+  Repeat what you did in (b) above by setting the \texttt{whiten}
+  parameter as \texttt{True} in the \texttt{PCA()} constructor and
+  producing the plot. What difference do you observe? What do you think
+  \texttt{whiten} does specifically in this problem?
+\item
+  Perform a PCA on the entire dataframe \texttt{features} with
+  \texttt{whiten} set to \texttt{True} and produce a scatter plot of the
+  transformed data points with the first principal component
+  \texttt{PC\ 1} along x-axis and second principal component
+  \texttt{PC\ 2} along y-axis and the points colored by
+  \texttt{median\_house\_value} just like in (a).
+\item
+  Observe how the color indicating \texttt{median\_house\_value} varies
+  in the plot you produced in (e). Is the variation of
+  \texttt{median\_house\_value} depicted in this plot simpler than what
+  is indicated by all the above plots? Provide an \textbf{explanation}
+  for why it is (or) it is not the case.
+\item
+  The California Department of Housing and Community Development (HCD)
+  releases additional information about the data samples you used here,
+  by providing an \texttt{price\_index} tag that can take values
+  \texttt{high}, \texttt{middle} or \texttt{low} based
+  \texttt{median\_house\_value}. If you were to eventually use the
+  principal components you produced in (e), which one(s) among the
+  \texttt{PC\ 1}, \texttt{PC\ 2}, ..,. would you use to classify the
+  data samples into these three categories (\texttt{high},
+  \texttt{middle} and \texttt{low})? Concretely \textbf{justify} your
+  choice.
+\end{enumerate}
+
+\textbf{Bonus : (3 points)} \textgreater{} (h) In the plot that you
+observe in (a), you will remark two major clusters that are the
+\emph{darkest}. Let us identify the cluster with the higher value of
+\texttt{latitude} as the \texttt{SF\ cluster} and the one with the lower
+value of \texttt{latitude} as the \texttt{LA\ cluster}. Verify
+programmatically if this clustering is preserved or distorted in the
+plot in (e). What does this tell you about what is represented by the
+second principal component \texttt{PC\ 2} produced in (e)?
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{housing} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{path}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{california\PYZus{}housing.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{133}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{features} \PY{o}{=} \PY{n}{housing}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{latitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{longitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}house\PYZus{}value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+\PY{n}{features}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{133}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   latitude  longitude  median\_house\_value
+0     34.19    -114.31             66900.0
+1     34.40    -114.47             80100.0
+2     33.69    -114.56             85700.0
+3     33.64    -114.57             73400.0
+4     33.57    -114.57             65500.0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{134}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{)}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{scatterplot}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{features}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{longitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{latitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{hue}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}house\PYZus{}value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_10_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{138}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pca} \PY{o}{=} \PY{n}{PCA}\PY{p}{(}\PY{n}{n\PYZus{}components}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{pcs} \PY{o}{=} \PY{n}{pca}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{features}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{latitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{longitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{pca\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{pcs}\PY{p}{,} \PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{pca\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}house\PYZus{}value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{features}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}house\PYZus{}value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{139}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pca\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{139}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       PC 1      PC 2  median\_house\_value
+0 -4.632846  2.860289             66900.0
+1 -4.370153  2.886607             80100.0
+2 -4.827792  2.336365             85700.0
+3 -4.857522  2.294939             73400.0
+4 -4.908696  2.247176             65500.0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{140}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{)}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{scatterplot}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{pca\PYZus{}df}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{hue}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_14_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+\end{enumerate}
+
+    PC1 likely represents the downward slope in the original dataset, from
+top left to bottom right. In other words, it represents the decrease in
+latitude and increase in longitude (this can be translated to the
+south-western-ness of a point).
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pca} \PY{o}{=} \PY{n}{PCA}\PY{p}{(}\PY{n}{n\PYZus{}components}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{,} \PY{n}{whiten}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{pcs} \PY{o}{=} \PY{n}{pca}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{features}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{latitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{longitude}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{pca\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{pcs}\PY{p}{,} \PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\PY{n}{pca\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}house\PYZus{}value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{features}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}house\PYZus{}value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pca\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       PC 1      PC 2  median\_house\_value
+0 -1.611088  5.057651             66900.0
+1 -1.519736  5.104189             80100.0
+2 -1.678881  4.131233             85700.0
+3 -1.689220  4.057982             73400.0
+4 -1.707015  3.973527             65500.0
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{)}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{scatterplot}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{pca\PYZus{}df}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{hue}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_20_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Whitening in this example seems to contribute to variance reduction. The
+range of our PCs are smaller.
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{4}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pca} \PY{o}{=} \PY{n}{PCA}\PY{p}{(}\PY{n}{n\PYZus{}components}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{whiten}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\PY{n}{pcs} \PY{o}{=} \PY{n}{pca}\PY{o}{.}\PY{n}{fit\PYZus{}transform}\PY{p}{(}\PY{n}{features}\PY{p}{)}
+\PY{n}{pca\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{pcs}\PY{p}{,} \PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{median\PYZus{}house\PYZus{}value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{pca\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+       PC 1      PC 2  median\_house\_value
+0 -1.210522 -1.688243            5.068627
+1 -1.096713 -1.590321            5.189372
+2 -1.048430 -1.745882            4.094409
+3 -1.154480 -1.762187            3.950082
+4 -1.222593 -1.783791            3.814070
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{12}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{)}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{scatterplot}\PY{p}{(}\PY{n}{data}\PY{o}{=}\PY{n}{pca\PYZus{}df}\PY{p}{,} \PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PC 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{hue}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{median\PYZus{}house\PYZus{}value}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  The variation in the median house value in the full dataset PCA case
+  above is not simpler than the previous 2 PC case. It isn't simpler
+  because there are multiple distinct ranges of PC1 and PC2 combinations
+  that equate to the same median house value (e.g.~median house value of
+  0 and 2 can be seen in PC1 ranges {[}-1, 2{]} and PC2 ranges {[}-1.5,
+  -0.5{]} + {[}0.5, 1.5{]}) Whereas in the previous example, there is a
+  gradual transition in median house values over the range of PCs.
+\end{enumerate}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  I would use PC2. This is because the median house values shown in the
+  graph in the 2 PC example are easily distinguishable when referring to
+  the y-component (PC2). We can get a rough but somewhat accurate idea
+  of the price group from it alone. Compared to the PC1 axis which has
+  one of each price groups (low, med, high) for each level in its entire
+  range.
+\end{enumerate}
+
+    \hypertarget{clustering}{%
+\subsection{Clustering}\label{clustering}}
+
+    \hypertarget{q2}{%
+\paragraph{\texorpdfstring{\textbf{Q2}}{Q2}}\label{q2}}
+
+    \textbf{10 points} = \((1 + 2 + 3 + 1.5 + 1.5 + 2)\)
+
+    A bird detection system that is equipped with multiple sensors is
+deployed in an observation station in an open space and it detects and
+collects some information about birds that visit the space. For each
+detected bird, it is able to collect the following information:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{position} - a value of the form
+  (\texttt{x},\texttt{y},\texttt{z}) which indicates the coordinates in
+  a three-dimensional space defined by the LiDAR field of the system.
+  \texttt{x} and \texttt{y} coordinates are in the range (-500,500)
+  whereas \texttt{z} coordinate is in the range (0,150) where 0
+  indicates the ground level for \texttt{z}.
+\item
+  \texttt{sound\_level} - a value in decibels (0-120 dB) of the sound
+  made by the detected bird with 0 indicating no audible sound and 120
+  indicating maximum sound that can be detected.
+\item
+  \texttt{time\_of\_visit} - a value indicating number of milliseconds
+  since the 00:00 hours of the day of collection.
+\end{itemize}
+
+The system sends out a table with the above three fields periodically to
+you. You are leading a team of data scientists to explore if the data
+collected by this system can be used to distinguish the different
+species of birds visiting the station located in the open space.
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\item
+  You decide that using clustering for initially attempting this problem
+  is a good option. How would you \emph{logically} convince your team of
+  this?
+\item
+  Your team is trying to decide between using K-means and hierarchical
+  clustering, both based on an Euclidean distance measure. Propose a
+  list of preprocessing operations to be performed on the before you use
+  any clustering algorithm on the raw dataset. \textbf{Justify} why you
+  include each step.
+\item
+  An enthusiastic intern in your team selects a subset of \emph{raw}
+  data samples from the dataset, selecting some nocturnal birds that
+  visit all together exactly at midnight everyday and they cannot
+  produce any sound. They all have been observed to consistently sit on
+  the ground along a straight line. He generates the following
+  dendrogram (left) using an agglomerative hierarchical clustering with
+  an appropriate linkage that maximizes intercluster dissimilarity. On
+  the right is a top-view visualization of the arrangement of the birds
+  in the station, based on the dendrogram. The bird B1 has already been
+  placed. Place the birds B2 - B9 on the line with an \emph{appropriate}
+  spacing between them. \textbf{Explain} your choice.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{3}
+\item
+  You are informed by a group of expert ornitholigists that groups of
+  birds that belong to different species, tend to visit the station in
+  almost equal numbers per species. Based on this information, what type
+  of linkage would you use in the hierarchical clustering algorithm?
+  \textbf{Justify} your choice.
+\item
+  The group of ornithologists have identified that exactly 10 species of
+  birds visit the station. Does this information help you decide between
+  choosing the K-means and hierarchical clustering algorithms?
+  \textbf{Explain} why/why not.
+\item
+  Briefly outline any \textbf{two} ways in which you can verify if the
+  clustering you have performed has captured the natural grouping that
+  exists among the actual data samples.
+\end{enumerate}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+\end{enumerate}
+
+    Clustering is a good idea here since we are not looking to predict a
+specific outcome. Instead we are trying to associate or group new birds
+with birds of the same type. We are trying to combine birds of similar
+characteristics based on a few recorded features.
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{itemize}
+\tightlist
+\item
+  Remove outliers and impute missing values since KMeans cannot handle
+  them.
+\item
+  Normalize all variables so that euclidean distance isn't influenced in
+  large part by a subset of the features.
+\end{itemize}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+\end{enumerate}
+\newpage
+\begin{figure}[h]
+    \includegraphics[width=8cm]{2c.jpg}
+\end{figure}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+\end{enumerate}
+
+    Given the above-mentioned facts, I would use the centroid or average
+linkage. To assess the similarity or dissimilarity between groups, since
+they arrive in groups/clusters, we can take the average of all the birds
+of a given category and compare it to another groups average,
+essentially implementing distance between centroids as our main metric
+to build our hierarchical clustering diagram.
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{4}
+\tightlist
+\item
+\end{enumerate}
+
+    We are not given very much information and since we have few points and
+no guarantee that the data we are dealing with is hyper spherical, it is
+somewhat more appropriate to use hierarchical clustering.
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{5}
+\tightlist
+\item
+\end{enumerate}
+
+    We can use a combination of the following 2 metrics to assess the
+accuracy of our clustering.
+
+\begin{itemize}
+\tightlist
+\item
+  Cluster Cohesion: We measure the distance between points within a
+  cluster and try to minimize this value.
+\item
+  Cluster Separation: We measure the distance between clusters and try
+  to maximize this value.
+\end{itemize}
+
+    \hypertarget{cross-validation}{%
+\subsection{Cross Validation}\label{cross-validation}}
+
+    \hypertarget{q3}{%
+\paragraph{\texorpdfstring{\textbf{Q3}}{Q3}}\label{q3}}
+
+    \textbf{10 points} = \$(1 + 2 + 3 + 1.5 + 1 + 1.5) \$
+
+    Given below is a pair of plots generated while cross-validating a K-NN
+model trained on a dataset with various values of K using 12-fold CV and
+Leave-one-out (LOOCV) methods :
+
+Answer the following questions:
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\item
+  What is the motivation behind using cross-validation techniques such
+  as LOOCV and k-fold CV over having a validation set?
+\item
+  What could possibly explain the difference in the error curves in the
+  two methods in the plots?
+\item
+  Describe how similar (or) different the error curves generated on the
+  same dataset would look like for another independent run of
+  \textbf{each of} the methods \emph{12-fold} and \emph{LOOCV}, compared
+  to the plots above. \textbf{Explain} the reason for your answer in
+  each case.
+\item
+  Under which circumstances would you would favour using LOOCV over
+  k-fold CV?
+\item
+  Based on the above plots, what is the best value for the
+  hyperparameter K of the model? \textbf{Explain why.}
+\item
+  What type of hyperparameter search do the above plots illustrate?
+  \textbf{Explain}.
+\end{enumerate}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+  The main motivations are that we can reduce the bias in our model and
+  that we can utilize the entirety of our training set. Having a
+  validation set limits the size of our training set and therefore
+  prevents us from extracting all of the insight from our training set.
+\end{enumerate}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  The fact that LOOCV has access to a greater proportion of the training
+  set per iteration could explain why overall LOOCV seems to be a much
+  better performer than 12-fold CV. It will yield approximately unbiased
+  estimates compared to the somewhat biased 12-fold CV estimates.
+\end{enumerate}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Assuming we are dealing with independent estimates, the LOOCV curve
+  will look similar to the one presented since it will have lower
+  variance between models/iterations. We have lower variance since we're
+  moving a single data point and so we'll have a very high rate of
+  overlap between our training sets. This is not the case however in the
+  case of KFold-CV. We can expect to see a quite different curve if we
+  run it again.
+\end{enumerate}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  If we have a very small dataset, then using LOOCV would be preferable
+  over KFold CV since we want to be able to use the most of the training
+  set as we can for training.
+\end{enumerate}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  A K value of 5 seems appropriate as it yields the lower error in both
+  LOOCV and KFold CV. It also happens to be a pretty standard/default
+  value for KFold CV.
+\end{enumerate}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  These plots demonstrate a manual hyperparameter search. Here, we are
+  analysing a single hyperparameter K for both CV methods. We are
+  checking to see what error each value yields and combined with our
+  understanding of the bias variance tradeoff, are looking to choose the
+  optimal K value.
+\end{enumerate}
+
+    \hypertarget{inference-and-bootstrapping}{%
+\subsection{Inference and
+Bootstrapping}\label{inference-and-bootstrapping}}
+
+    \hypertarget{q4}{%
+\paragraph{\texorpdfstring{\textbf{Q4}}{Q4}}\label{q4}}
+
+    \textbf{16 points} =
+\((1.5 + 1.5 + 1.5 + 1.5 + 2 + 2 + 1.5 + 1.5 + 1.5 + 1.5)\)
+
+    The dataset loaded in the next cell consists of data from a drug trial
+experiment.\\
+* \texttt{subject\_type} indicates 0 for if a subject is a
+\emph{control} and 1 if taking \emph{treatment}. *
+\texttt{daily\_dosage} indicates the dosage of the drug in millilitres
+(mL) * \texttt{life\_expectancy} show the projected age (year) upto
+which that the subject is expected to live.
+
+Let the field \texttt{subject\_type} in the dataset correspond to
+\(x_{type}\), \texttt{daily\_dosage} to \(x_{dosage}\) and
+\texttt{life\_expectancy} to \(y\).
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+  Now, consider the regression :
+  \[y = \beta_{dosage} x_{dosage} + \beta_{type} x_{type} + \beta_{0} + \epsilon\]
+\end{enumerate}
+
+Write your code to perform this regression and list the coefficient
+estimates \(\hat{\beta}_{dosage}\), \(\hat{\beta}_{type}\) and
+\(\hat{\beta}_{0}\) that you obtained by running your code.
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\item
+  Run a bootstrap of the dataset over 500 iterations, and collect the
+  coefficients \(\hat{\beta}_{dosage}\), \(\hat{\beta}_{type}\) and
+  \(\hat{\beta}_{0}\) that you obtain in each iteration.
+\item
+  Use the coefficient estimates that you collected in (b) and estimate
+  the standard errors of all the 3 coefficients
+  \(S.E.(\hat{\beta}_{dosage})\), \(S.E.(\hat{\beta}_{type})\) and
+  \(S.E.(\hat{\beta}_{0})\).
+\item
+  Plot a histogram to observe the distribution of each of the collected
+  coefficient estimates. What do you observe?
+\item
+  Provide a 95\% confidence interval for each of the coefficient
+  estimates. What does this interval mean?
+\item
+  Generate the scatterplot for the points in the dataset with
+  \texttt{daily\_dosage} on the x-axis, \texttt{life\_expectancy} on the
+  y-axis and the points colored by the \texttt{subject\_type} value
+  (separate colors to indicate the types 0 and 1) with the collected 500
+  bootstrap sampled fits overlaid. To make the plot easier to read,
+  reduce the transparency of the lines.
+\item
+  Based on all the above, \textbf{explain} intuitively what is conveyed
+  by the plot you generated in (f).
+\item
+  Make a scatterplot of the bootstrapped coefficients,
+  \(\left(\beta_{type}^{\ast}, \beta_{dosage}^{\ast}\right)\) against
+  one another. \textbf{Comment} on the overall distribution of these two
+  coefficients \textbf{and} the nature of correlation between them.
+\item
+  Similar to above, estimate the coefficient estimates
+  \(\hat{\beta}_{dosage}\) and \(\hat{\beta}_{0}\) and the standard
+  error of the dosage coefficient \(S.E.(\hat{\beta}_{dosage})\) by
+  bootstrapping the dataset over 500 iterations and fitting the dataset
+  in the regression :
+  \[y = \beta_{dosage} x_{dosage} + \beta_{0} + \epsilon\]
+\item
+  Comparing the results in (i) and (c), what can you comment about the
+  relationship of \texttt{daily\_dosage} and \texttt{subject\_type} with
+  \texttt{life\_expectancy}?
+\end{enumerate}
+
+\textbf{Bonus : (3 points)} \textgreater{} (k) In a bootstrap of the
+dataset over 500 iterations similar to the above, perform an independent
+t-test with an \(\alpha=0.05\) significance level, using
+\texttt{scipy.stats.ttest\_ind} on the \texttt{life\_expectancy} of
+these two groups . Collect the p-values and plot the p-value histogram.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{trials} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{path}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{drug\PYZhy{}trials.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{trials}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{15}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+   subject\_type  daily\_dosage  life\_expectancy
+0             0        22.762         63.39666
+1             0        22.762         80.14504
+2             1        16.036         82.31560
+3             1        23.830         84.20141
+4             0         3.073         57.28034
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{X} \PY{o}{=} \PY{n}{trials}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZus{}dosage}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{subject\PYZus{}type}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+\PY{n}{y} \PY{o}{=} \PY{n}{trials}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{life\PYZus{}expectancy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{lr} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{lr}\PY{o}{.}\PY{n}{intercept\PYZus{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+65.67943220081068
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{lr}\PY{o}{.}\PY{n}{coef\PYZus{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([0.27154927, 5.6681168 ])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    B\_dosage = 0.2715
+
+B\_type = 5.668
+
+B\_0 = 65.6794
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{57}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{coef\PYZus{}dosage} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{coef\PYZus{}type} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{coef\PYZus{}0} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{500}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Resample from data with replacement then split into X and y.}
+    \PY{n}{trials\PYZus{}boot} \PY{o}{=} \PY{n}{resample}\PY{p}{(}\PY{n}{trials}\PY{p}{,} \PY{n}{replace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{n}{X\PYZus{}boot} \PY{o}{=} \PY{n}{trials\PYZus{}boot}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZus{}dosage}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{subject\PYZus{}type}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+    \PY{n}{y\PYZus{}boot} \PY{o}{=} \PY{n}{trials\PYZus{}boot}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{life\PYZus{}expectancy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} Fit regressor and store coefs.}
+    \PY{n}{lr} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}boot}\PY{p}{,} \PY{n}{y\PYZus{}boot}\PY{p}{)}
+    \PY{n}{coef\PYZus{}dosage}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{lr}\PY{o}{.}\PY{n}{coef\PYZus{}}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{n}{coef\PYZus{}type}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{lr}\PY{o}{.}\PY{n}{coef\PYZus{}}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+    \PY{n}{coef\PYZus{}0}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{lr}\PY{o}{.}\PY{n}{intercept\PYZus{}}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{141}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{len}\PY{p}{(}\PY{n}{coef\PYZus{}0}\PY{p}{)}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{coef\PYZus{}dosage}\PY{p}{)}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{coef\PYZus{}type}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{141}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(500, 500, 500)
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{59}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}dosage}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{59}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.11139904514756391
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{60}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}type}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{60}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+1.8537206181000243
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{61}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+2.3145047405328287
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{143}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{LR Dosage Coefficients from a 500 Iteration Boostrap}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{coef\PYZus{}dosage}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_73_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{142}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{LR Type Coefficients from a 500 Iteration Boostrap}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{coef\PYZus{}type}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_74_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{70}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Linear Regression Intercepts from a 500 Iteration Boostrap}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{coef\PYZus{}0}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_75_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Here, I observe that all of the coefficients seem normally distributed.
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{4}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{71}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{p}{[}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{coef\PYZus{}dosage}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mf}{1.96}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}dosage}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{coef\PYZus{}dosage}\PY{p}{)} \PY{o}{+} \PY{l+m+mf}{1.96}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}dosage}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{71}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[0.04843414356615369, 0.4851184005446042]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{72}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{p}{[}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{coef\PYZus{}type}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mf}{1.96}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}type}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{coef\PYZus{}type}\PY{p}{)} \PY{o}{+} \PY{l+m+mf}{1.96}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}type}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{72}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[2.023685554532826, 9.290270377484921]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{73}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{p}{[}\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{coef\PYZus{}0}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m+mf}{1.96}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}0}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{coef\PYZus{}0}\PY{p}{)} \PY{o}{+} \PY{l+m+mf}{1.96}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}0}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{73}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+[61.24290230798341, 70.3157608908721]
+\end{Verbatim}
+\end{tcolorbox}
+        
+    These intervals represent the range in which the values of each
+coefficient will fall into, in 95\% of cases. It gives us a reasonable
+expectation of the coef values we should be getting.
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{5}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{93}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{)}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{500}\PY{p}{)}\PY{p}{:}
+    \PY{n}{l} \PY{o}{=} \PY{n}{sns}\PY{o}{.}\PY{n}{lineplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{n}{trials}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZus{}dosage}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} 
+                 \PY{n}{y}\PY{o}{=}\PY{n}{coef\PYZus{}dosage}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{*}\PY{n}{trials}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZus{}dosage}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{+} \PY{n}{coef\PYZus{}type}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{o}{*}\PY{n}{trials}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{subject\PYZus{}type}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{+} \PY{n}{coef\PYZus{}0}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{,}
+                 \PY{n}{hue}\PY{o}{=}\PY{n}{trials}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{subject\PYZus{}type}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}
+                 \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,}
+                 \PY{n}{legend}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\PY{n}{sns}\PY{o}{.}\PY{n}{scatterplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{n}{trials}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZus{}dosage}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{n}{trials}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{life\PYZus{}expectancy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{hue}\PY{o}{=}\PY{n}{trials}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{subject\PYZus{}type}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_83_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{6}
+\tightlist
+\item
+\end{enumerate}
+
+    What we can infer intuitively from this graph is that, generally
+speaking, subject\_type = 1 have a higher life expectancy than blue and
+coupled with a higher daily dosage, we maximize life expectancy, so
+daily dosage is positively correlated to life expectancy.
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{7}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{97}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{sns}\PY{o}{.}\PY{n}{scatterplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{n}{coef\PYZus{}type}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{n}{coef\PYZus{}dosage}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_87_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    From this plot of coefficients we can clearly observe that our daily
+dosage and subject type coefficients are not correlated. Therefore, this
+tells us that our features are not correlated, which removes the worry
+of multicollinearity in our model.
+
+    \begin{enumerate}
+\def\labelenumi{(\roman{enumi})}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{115}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{coef\PYZus{}dosage} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+\PY{n}{coef\PYZus{}0} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{500}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Resample from data with replacement then split into X and y.}
+    \PY{n}{trials\PYZus{}boot} \PY{o}{=} \PY{n}{resample}\PY{p}{(}\PY{n}{trials}\PY{p}{,} \PY{n}{replace}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+    \PY{n}{X\PYZus{}boot} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{n}{trials\PYZus{}boot}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZus{}dosage}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{)}
+    \PY{n}{y\PYZus{}boot} \PY{o}{=} \PY{n}{trials\PYZus{}boot}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{life\PYZus{}expectancy}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+    
+    \PY{c+c1}{\PYZsh{} Fit regressor and store coefs.}
+    \PY{n}{lr} \PY{o}{=} \PY{n}{LinearRegression}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X\PYZus{}boot}\PY{p}{,} \PY{n}{y\PYZus{}boot}\PY{p}{)}
+    \PY{n}{coef\PYZus{}dosage}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{lr}\PY{o}{.}\PY{n}{coef\PYZus{}}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+    \PY{n}{coef\PYZus{}0}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{lr}\PY{o}{.}\PY{n}{intercept\PYZus{}}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{146}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{coef\PYZus{}type}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{146}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+5.656977966008873
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{118}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{coef\PYZus{}dosage}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{118}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+0.11428382812749135
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{9}
+\tightlist
+\item
+  We can confirm that both variables are positively correlated with life
+  expectancy. For every unit of daily dosage, we have an average of 0.3
+  unit increase in life expectancy and for subject type 1 we have an
+  average of 5.6 unit increase in life expectancy.
+\end{enumerate}
+
+    \hypertarget{feature-engineering}{%
+\subsection{Feature Engineering}\label{feature-engineering}}
+
+    \hypertarget{q5}{%
+\paragraph{\texorpdfstring{\textbf{Q5}}{Q5}}\label{q5}}
+
+    \textbf{4 points} = \((1.5 + 2.5)\)
+
+    Given below is a cell that loads a dataset that contains features
+representing the body measurements of certain types of sharks in various
+regions in Canada.
+
+Using programming, perform analyses using the following methods to
+identify the outlier samples in the dataset :
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\item
+  For each \emph{feature} among \texttt{body\_length},
+  \texttt{fin\_length} and \texttt{tail\_length} in the dataset, use a
+  box plot to visualize the feature values (along y-axis) grouped by
+  \texttt{region} feature (show on x-axis). Identify the \texttt{region}
+  and \texttt{feature} (other than \texttt{region}) that shows the
+  highest number of outliers.
+\item
+  For the \texttt{region} and the \texttt{feature} you chose in (a), use
+  the Q3-Q1 Inter-Quartile Range (IQR) to identify and list the rows of
+  the outliers from the dataframe.
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{149}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{sharks} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{n}{path}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ca\PYZhy{}sharks.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{150}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{for} \PY{n}{f} \PY{o+ow}{in} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{body\PYZus{}length}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fin\PYZus{}length}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{tail\PYZus{}length}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{:}
+    \PY{n}{sns}\PY{o}{.}\PY{n}{boxplot}\PY{p}{(}\PY{n}{x}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{region}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{y}\PY{o}{=}\PY{n}{f}\PY{p}{,} \PY{n}{data}\PY{o}{=}\PY{n}{sharks}\PY{p}{)}
+    \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_100_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_100_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_100_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    The body length feature shows the most number of outliers, namely in the
+YT region. (There are a small amount of outliers in AB region as well)
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+\end{enumerate}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{161}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{Q1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{percentile}\PY{p}{(}\PY{n}{sharks}\PY{p}{[}\PY{n}{sharks}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{region}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{YT}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{body\PYZus{}length}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{25}\PY{p}{)}
+\PY{n}{Q3} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{percentile}\PY{p}{(}\PY{n}{sharks}\PY{p}{[}\PY{n}{sharks}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{region}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{YT}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{body\PYZus{}length}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{75}\PY{p}{)}
+\PY{n}{IQR} \PY{o}{=} \PY{n}{Q3}\PY{o}{\PYZhy{}}\PY{n}{Q1}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{162}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{IQR}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{162}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+63.73342500000001
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{163}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{outliers} \PY{o}{=} \PY{p}{[}\PY{n}{bl} \PY{k}{for} \PY{n}{bl} \PY{o+ow}{in} \PY{n}{sharks}\PY{p}{[}\PY{n}{sharks}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{region}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{YT}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{body\PYZus{}length}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{k}{if} \PY{n}{bl} \PY{o}{\PYZlt{}}\PY{o}{=} \PY{n}{Q1} \PY{o}{\PYZhy{}} \PY{l+m+mf}{1.5}\PY{o}{*}\PY{n}{IQR} \PY{o+ow}{or} \PY{n}{bl} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n}{Q3} \PY{o}{+} \PY{l+m+mf}{1.5}\PY{o}{*}\PY{n}{IQR}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{164}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{outlier\PYZus{}subset} \PY{o}{=} \PY{n}{sharks}\PY{p}{[}\PY{p}{(}\PY{n}{sharks}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{region}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{==}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{YT}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)} \PY{o}{\PYZam{}} \PY{p}{(}\PY{n}{sharks}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{body\PYZus{}length}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{n}{outliers}\PY{p}{)}\PY{p}{)}\PY{p}{]}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{165}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{outlier\PYZus{}subset}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{165}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    id region  fin\_length  body\_length  tail\_length
+35  36     YT        20.2     272.3920     2.653751
+53  54     YT        57.8     570.5584     3.253912
+54  55     YT        74.0     639.7450     3.365487
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{q6}{%
+\paragraph{\texorpdfstring{\textbf{Q6}}{Q6}}\label{q6}}
+
+    \textbf{8 points} = \((1 + 3 + 2 + 2 )\)
+
+    For the questions below, answer briefly by inspecting the dataset below.
+(There is no need to use any programming) :
+
+This is a representative subset of a collected dataset with information
+about used buses across three Canadian cities. A model needs to be fit
+to predict the selling price \texttt{Price(\$)} of a bus. \texttt{-\/-}
+indicates that the information is not available.
+
+% \begin{longtable}[]{@{}llllllllll@{}}
+% \toprule
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% ID\strut
+% \end{minipage} &
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% City\strut
+% \end{minipage} &
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Province\strut
+% \end{minipage} &
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Vehicle model\strut
+% \end{minipage} &
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Category\strut
+% \end{minipage} &
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Mileage(kmpl)\strut
+% \end{minipage} &
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Certification\strut
+% \end{minipage} &
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Year\strut
+% \end{minipage} &
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Num\_Damages\strut
+% \end{minipage} &
+% \begin{minipage}[b]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Price(\$)\strut
+% \end{minipage}\tabularnewline
+% \midrule
+% \endhead
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 1\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Montréal\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% QC\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% CX-120\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% School\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 2.5\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Certified\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 2018\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 3\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 44900\strut
+% \end{minipage}\tabularnewline
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 2\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Vancouver\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% BC\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% AL-100\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Tourism\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 5\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Not certified\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 2016\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% --\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 22380\strut
+% \end{minipage}\tabularnewline
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 3\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Toronto\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% ON\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% WS-978\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Tourism\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% --\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Certified\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% --\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% --\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 30000\strut
+% \end{minipage}\tabularnewline
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 4\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Vancouver\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% BC\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% RR8\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Factory\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 1.5\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Certified\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 2012\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 5\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 10500\strut
+% \end{minipage}\tabularnewline
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 5\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Toronto\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% ON\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% GH-50\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Factory\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 4.5\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Not certified\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 2015\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% --\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 12000\strut
+% \end{minipage}\tabularnewline
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 6\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Montréal\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% QC\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% --\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% School\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% --\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% Not certified\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 2010\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% --\strut
+% \end{minipage} &
+% \begin{minipage}[t]{(\columnwidth - 9\tabcolsep) * \real{0.10}}\raggedright
+% 8000\strut
+% \end{minipage}\tabularnewline
+% \bottomrule
+% \end{longtable}
+
+\begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\item
+  List the features that you would remove from the dataset before using
+  it for model fitting. Give valid \textbf{reasons} for your answer.
+\item
+  List the features that need to be encoded in this dataset and outline
+  which encoding schemes your would use in each case. Give valid
+  \textbf{reasons} for your answer.
+\item
+  What type of an imputation scheme would make sense for the missing
+  values in each of the fields \texttt{Year} and \texttt{Mileage}? Give
+  valid \textbf{reasons} for your answer.
+\item
+  You propose to use the simplest sparsity-based method to select the
+  best features among those given in the dataset. In just two lines,
+  describe the high-level procedure to do this.
+\end{enumerate}
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\tightlist
+\item
+\end{enumerate}
+
+    I would remove Vehicle model as it is information that is likely to
+suffer from high dimensionality and will add noise to our predictions
+and increase the runtime of our model training. I would also remove City
+since it will likely be highly correlated with Province and
+multicollinearity will occur.
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+\end{enumerate}
+
+    Once we remove the features mentioned above, we will one hot encode
+Province and Category and we will label encode Certification. We will
+one-hot encode Prov and Cat since these categorical variables cannot be
+ordered in any meaningful way relative to the target variable whereas
+certification can be ordered. Price seems to be positively correlated
+with the presence of certification in buses (as observed from the small
+subset of data).
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+\end{enumerate}
+
+    Year: We will impute by the mode year per Category. We can't use mean or
+median since this will likely produce decimal values. Tourism buses will
+probably want to update their buses frequently and so they will have
+more recent buses whereas factory buses are less concerned with the
+appearance and functions of their buses and more concerned with saving
+money, making a category grouping somewhat appropriate.
+
+Mileage: We will impute by group average mean, where we group the
+observations by year. This is reasonable since newer cars/buses are
+generally more fuel efficient.
+
+    \begin{enumerate}
+\def\labelenumi{(\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+\end{enumerate}
+
+    We will implement Lasso feature selection. Lasso will set some feature
+coefficients to 0 to reduce the number of correlated variables, then it
+will find the coefficients that minimize the objective (penalized by a
+regularization term lambda)
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
